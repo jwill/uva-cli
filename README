@@ -1,2 +1,27 @@
 Command line tool for the UVa Online Judge website
 
+This is still incomplete yet.
+Hopefully it will be done over the next few days when I'm free.
+
+
+Features:
+- Submit a file to the OJ through command line
+- See your submissions
+- See your statistics
+- Password-less submissions
+
+More features coming soon:
+- Auto-retry submitting the solution (when UVA is down)
+- Connects to UVAtoolkit
+- Get statistics on a problem
+
+Implementation:
+Everything is written in C++ because I'm a hardcore C++ programmer. =p
+
+Source code is included so you know there is no virus in it !
+
+This should work across Windows and Linux based platforms.
+It has a thin wrapper around the socket API.
+
+Please let me know if there is any problem!
+
