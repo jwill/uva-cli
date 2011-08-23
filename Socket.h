@@ -7,15 +7,20 @@ Socket class header
 #ifndef SOCKET_H
 #define SOCKET_H
 
+#include "Common.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <signal.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <netinet/in.h>
+#include <string>
+
+#ifndef OSWIN
+    #include <signal.h>
+    #include <sys/socket.h>
+    #include <sys/types.h>
+    #include <sys/wait.h>
+    #include <arpa/inet.h>
+    #include <unistd.h>
+    #include <netinet/in.h>
+#endif
 
 /**
  * TCP-based socket
@@ -29,9 +34,8 @@ public:
     explicit Socket(const char *in_host, int in_port = 80)
         : host(in_host), 
           port(in_port),
-          fd(-1),
-          num_unread(0),
-          unread_idx(0)
+          fd(0),
+          has_fd(false)
     {
         // nothing    
     }
@@ -41,47 +45,47 @@ public:
     /**
      * Connects to the host and port.
      * @return true if connected successfully; false otherwise.
-     * @note This will still return true if already connected.
+     * @note This will still return true even if already connected.
      */
     bool connect();
 
     /**
      * Writes to the socket safely and will auto retry 
      * on interrupts.
-     * @return Number of bytes written.
+     * @return Number of bytes written; negative on error
      */
-    size_t write(const void *data, size_t size);
+    int write(const void *data, int size);
 
     /**
      * Reads from the socket safely and will auto retry
      * on interrupts.
-     * @return Number of bytes read.
+     * @return Number of bytes read; negative on error
      */
-    size_t read(void *buf, size_t size);
+    int read(void *buf, int size);
+
+    #ifdef OSWIN
+    inline static bool isValid(sock_t sock) { return sock != INVALID_SOCKET; }
+    inline static void close(sock_t sock) { closesocket(sock); }
+    #else
+    inline static bool isValid(sock_t sock) { return sock >= 0; }
+    inline static void close(sock_t sock) { close(sock); }
+    #endif
 
 protected:
-    const size_t BUFFER_SIZE = 8192;
-
     static bool getHostAddr(const char *host, struct in_addr *addr);
 
 private:
-    /** Host address */
-    const char *const host;
+    /** Private copy of host */
+    const std::string host;
 
-    /** Port */
+    /** Port number */
     const int port;
 
-    /** Zero-based index of the next unread byte */
-    size_t unread_idx;
-
-    /** Number of unread bytes */
-    size_t num_unread;
-
-    /** Internal buffer for reading */
-    char buffer[BUFFER_SIZE];
-
     /** Socket file descriptor. */
-    int fd;
+    sock_t fd;
+
+    /** Whether fd is valid */
+    bool has_fd;
 };
 
 #endif // SOCKET_H
