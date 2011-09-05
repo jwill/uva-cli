@@ -1,9 +1,10 @@
 /**
-Socket class implementation.
-
-@author Lucas Tan
+* Socket class implementation.
+*
+* @author Lucas Tan
 */
 
+#include "Common.h"
 #include "Socket.h"
 
 #ifdef OSWIN
@@ -26,18 +27,14 @@ Socket class implementation.
         }
     };
 
-    static Init init;
+    static Init __init;
 #else
     #include <errno.h>
 #endif
 
 Socket::~Socket()
 {
-    if (this->has_fd)
-    {
-        Socket::close(this->fd);
-        this->has_fd = false;
-    }
+    this->close();
 }
 
 bool Socket::getHostAddr(const char *host, struct in_addr *addr)
@@ -105,20 +102,18 @@ bool Socket::connect()
     return true;
 }
 
-int Socket::write(const void *data, int size)
+ssize_t Socket::write(const void *data, size_t size)
 {
-    if (size < 0) return -1;
-
-    int num_left = size;
-    ssize_t num_written = 0;
+    ssize_t cap_size = size & SSIZE_T_MAX;
+    ssize_t num_left = cap_size;
     const char *cur_ptr = (const char*)data;
 
     while (num_left)
     {
     #ifdef OSWIN
-        num_written = send(this->fd, cur_ptr, num_left, 0);
+        ssize_t num_written = send(this->fd, cur_ptr, num_left, 0);
     #else    
-        num_written = send(this->fd, cur_ptr, num_left, MSG_NOSIGNAL);
+        ssize_t num_written = send(this->fd, cur_ptr, num_left, MSG_NOSIGNAL);
     #endif
         if (num_written <= 0)
         {
@@ -129,36 +124,40 @@ int Socket::write(const void *data, int size)
                 continue;
             }
             #endif
-            // there's an error
-            return -1;
+
+            // if we have written nothing so far, then
+            // report as error; else report the no. of bytes written
+            return num_left == cap_size ? -1 : cap_size - num_left;
         }
         num_left -= num_written;
         cur_ptr += num_written;
     }
-    return size;
+
+    return cap_size;
 }
 
-int Socket::read(void *data, int size)
+ssize_t Socket::read(void *data, size_t size)
 {
-    if (size < 0) return -1;
-
-    int num_to_read = size;
-    ssize_t num_read;
+    ssize_t cap_size = size & SSIZE_T_MAX;
+    ssize_t num_to_read = cap_size;
     char *cur_ptr = (char*)data;
 
     while (num_to_read)
     {
-        num_read = recv(this->fd, cur_ptr, num_to_read, 0);
+        ssize_t num_read = recv(this->fd, cur_ptr, num_to_read, 0);
         if (num_read < 0)
         {
-            #ifdef OSWIN
-            return -1;
-            #else
-            if (num_read != EINTR) return -1;
+            #ifndef OSWIN
+            if (errno == EINTR)  continue;
             #endif
+            
+            // If we have read nothing so far, then report as error
+            // else report no. of bytes read.
+            return (num_to_read == cap_size ? -1 :
+                    cap_size - num_to_read);
         }
         else if (num_read == 0) 
-            return size - num_to_read; // End of file
+            return cap_size - num_to_read; // End of file
         else
         {
             cur_ptr += num_read;
@@ -166,7 +165,7 @@ int Socket::read(void *data, int size)
         }
     }
 
-    return size - num_to_read;
+    return cap_size;
 }
 
 

@@ -1,7 +1,7 @@
 /**
-Socket class header
-
-@author Lucas Tan
+* Socket class header
+*
+* @author Lucas Tan
 */
 
 #ifndef SOCKET_H
@@ -11,6 +11,7 @@ Socket class header
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>
+#include "OutputStream.h"
 
 #ifndef OSWIN
     #include <signal.h>
@@ -25,15 +26,23 @@ Socket class header
 /**
  * TCP-based socket
  */
-class Socket
+class Socket : public OutputStream
 {
 public:
+    #ifdef OSWIN
+    inline static bool isValid(sock_t sock){ return sock != INVALID_SOCKET; }
+    inline static void close(sock_t sock){ closesocket(sock); }
+    #else
+    inline static bool isValid(sock_t sock){ return sock >= 0; }
+    inline static void close(sock_t sock){ close(sock); }
+    #endif
+
     /**
      * Initializes this instance without connecting
      */
-    explicit Socket(const char *in_host, int in_port = 80)
-        : host(in_host), 
-          port(in_port),
+    explicit Socket(const char* _host, int _port = 80)
+        : host(_host), 
+          port(_port),
           fd(0),
           has_fd(false)
     {
@@ -54,22 +63,31 @@ public:
      * on interrupts.
      * @return Number of bytes written; negative on error
      */
-    int write(const void *data, int size);
+    ssize_t write(const void* data, size_t size);
 
     /**
      * Reads from the socket safely and will auto retry
      * on interrupts.
-     * @return Number of bytes read; negative on error
+     * @return Number of bytes read; zero on EOF; negative on error
      */
-    int read(void *buf, int size);
+    ssize_t read(void* buf, size_t size);
 
-    #ifdef OSWIN
-    inline static bool isValid(sock_t sock) { return sock != INVALID_SOCKET; }
-    inline static void close(sock_t sock) { closesocket(sock); }
-    #else
-    inline static bool isValid(sock_t sock) { return sock >= 0; }
-    inline static void close(sock_t sock) { close(sock); }
-    #endif
+    inline bool flush() 
+    {
+        // We let the OS decide when to flush
+        return this->has_fd; 
+    }
+
+    inline void close() 
+    { 
+        if (this->has_fd)
+        {
+            close(this->fd); 
+            this->has_fd = false; 
+        }
+    }
+
+    inline bool isClosed() const { return !this->has_fd; }
 
 protected:
     static bool getHostAddr(const char *host, struct in_addr *addr);
