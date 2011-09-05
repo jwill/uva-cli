@@ -9,6 +9,7 @@ Buffer class header
 
 #include<stdlib.h>
 #include<string.h>
+#include<string>
 
 /**
 A buffer that extends automatically by doubling its capacity whenever
@@ -31,6 +32,17 @@ public:
      *       false is returned.
      */
     bool append(const void *data, size_t size);
+
+    bool append(const char *str) 
+    {
+        // this can be optimized so we don't scan the string twice
+        return append(str, strlen(str));
+    }
+
+    bool append(const std::string& str)
+    {
+        return append(str.c_str(), str.size());
+    }
 
     /**
      * Gets the current size of data in the buffer, in bytes.
