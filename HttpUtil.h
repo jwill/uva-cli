@@ -6,7 +6,7 @@
 #ifndef HTTPUTIL_H
 #define HTTPUTIL_H
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <string>
 #include <map>
 #include "OutputStream.h"

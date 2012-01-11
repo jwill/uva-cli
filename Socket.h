@@ -8,8 +8,8 @@
 #define SOCKET_H
 
 #include "Common.h"
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 #include <string>
 #include "OutputStream.h"
 

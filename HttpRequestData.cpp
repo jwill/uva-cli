@@ -5,8 +5,8 @@
  */
 
 #include "Common.h"
-#include <string.h>
-#include <stdio.h>
+#include <cstring>
+#include <cstdio>
 #include "HttpRequestData.h"
 #include "HttpUtil.h"
 

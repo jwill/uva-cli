@@ -6,7 +6,7 @@
 #ifndef MEMORYOUTPUTSTREAM_H
 #define MEMORYOUTPUTSTREAM_H
 
-#include <string.h>
+#include <cstring>
 #include <string>
 #include "OutputStream.h"
 

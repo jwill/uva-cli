@@ -3,8 +3,8 @@
  * @author Lucas Tan
  */
 
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 #include "BufferedOutputStream.h"
 
 ssize_t BufferedOutputStream::write(const void* data, size_t size)

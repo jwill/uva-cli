@@ -7,9 +7,10 @@
 #define OUTPUTSTREAM_H
 
 #include "Common.h"
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstring>
 #include <string>
-#include <string.h>
+
 
 /**
  * Base class of all output stream classes.

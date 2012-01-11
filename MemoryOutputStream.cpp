@@ -5,8 +5,8 @@
 */
 
 #include <cassert>
-#include <stdlib.h>
-#include <string.h>
+#include <cstring>
+#include <cstdlib>
 #include "MemoryOutputStream.h"
 
 MemoryOutputStream::MemoryOutputStream()

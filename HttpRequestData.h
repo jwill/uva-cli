@@ -6,10 +6,10 @@
 #ifndef HTTPREQUESTDATA_H
 #define HTTPREQUESTDATA_H
 
-#include <map>
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstring>
 #include <string>
-#include <string.h>
+#include <map>
 #include "OutputStream.h"
 
 /**
