@@ -21,21 +21,21 @@ public:
     /**
      * Closes this output stream 
      */
-    virtual void close();
+    virtual void close() = 0;
 
-    virtual bool isClosed() const;
+    virtual bool isClosed() const = 0;
 
     /**
      * Flushes all buffered data to the underlying output sink.
      * @return true if all data is flushed successfully; false otherwise.
      */
-    virtual bool flush();
+    virtual bool flush() = 0;
 
     /**
      * Writes data to this output stream.
      * @return No. of bytes written; negative on failure
      */
-    virtual ssize_t write(const void* data, size_t size);
+    virtual ssize_t write(const void* data, size_t size) = 0;
 
     inline ssize_t write(const char* str) 
     {
