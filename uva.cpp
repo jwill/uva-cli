@@ -1,18 +1,43 @@
 /**
-Main entry point.
+ * Main entry point
+ * @author Lucas Tan 
+ */
 
-@author Lucas Tan 
-*/
+#include <web/HttpRequest.hpp>
+#include <net/Socket.hpp>
+#include <string>
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
 
-#include<string>
-#include<iostream>
-#include<stdio.h>
-#include<stdlib.h>
+using namespace cpp::net;
+using namespace cpp::web;
 
+void test()
+{
+    Socket s("www.yahoo.com");   
+    s.connect();
+      
+    std::cout << "connected" << std::endl;
+
+    HttpRequest req("/");
+    req.write(s);
+
+    std::cout << "sent request" << std::endl;
+    
+    ssize_t len =0;
+    char buf[1024];
+    while ((len = s.read(buf, sizeof(buf) - 1)) > 0)
+    {
+        buf[len] = 0;
+        std::cout << buf;
+    }
+    
+    // TODO : handle chunked transfer encoding, otherwise use http 1.0
+}
 
 int main(int argc, char **argv)
 {
-
-    return 0;
+    test();
 }
 
