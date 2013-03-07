@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="uva-cli" basedir="." default="all">
+    <property name="libName" value="uva-cli" />
+    <property name="libVer" value="1.0.0" />
+    <property name="libMainClass" value="app.UVAMain" />
+    <property name="libTestMainClass" value="" />
+
+    <import file="build-templ-java/buildTempl.xml" />
+</project>
+
