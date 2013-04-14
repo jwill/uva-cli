@@ -65,8 +65,8 @@ org.json
 
 uva-cli
 -------
-- Do "git submodule init"
-- Build this by typing "ant"
+- Do "git submodule init" and then "git submodule update"
+- Then build this by typing "ant"
 - You will get dist-1.0.0/uva-cli-1.0.0-all.jar
 
 Usage
