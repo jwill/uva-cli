@@ -32,15 +32,6 @@ and it will use the key to encrypt all your account passwords.
 
 Then to run, do "java -jar uva-cli-1.0.0-all.jar"
 
-Warranty
-========
-This software comes with ABSOLUTELY NO WARRANTY. 
-
-License
-=======
-I have not decided which license to apply to the source code.
-In the meantime, I reserve all copyrights.
-
 Building
 ========
 To build, you'd need:
@@ -170,6 +161,15 @@ Credits
 - UVA website
 - uHunt API
 - json.org
+
+Warranty
+========
+This software comes with ABSOLUTELY NO WARRANTY. 
+
+License
+=======
+I have not decided which license to apply to the source code.
+In the meantime, I reserve all copyrights.
 
 Please let me know if there is any problem!
 
