@@ -236,6 +236,7 @@ public class Main
             catch(Exception e)
             {
                 System.out.println("Error sending: "+e.getMessage());
+                
             }
         }
         else if (action.equals("show"))

@@ -34,7 +34,7 @@ public abstract class Adapter
 
     public abstract void printStatus()
         throws Exception;
-        
+
     public abstract void login() 
         throws IOException;
 
@@ -67,6 +67,8 @@ public abstract class Adapter
             }
         }
 
+        if (lang == null)
+                throw new RuntimeException("cannot detect language");
         send(probId, lang, file);
     }
 }
