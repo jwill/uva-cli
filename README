@@ -1,33 +1,169 @@
 Command line tool for the UVa Online Judge website
 
+UVA-CLI is an interactive shell where you can type commands to submit
+and check your submissions.
+
+Features
+========
+- Remembers your account info and encrypts your passwords.
+- Password-less submission.
+- Check most recent submission status.
+
+Requirements
+============
+To run, you need Java Runtime 1.6 and above.
+To check your java version, do "java --version" at the command line.
+To build, please see BUILDING section.
+
+Running
+=======
+A binary, ready-to-run version can be obtained from
+    https://dl.dropboxusercontent.com/u/17243832/uva-cli-1.0.0-all.jar    
+
+If you prefer to build it yourself, please see the Building section.
+
+All dependencies are packaged in to the jar for your convenience.
+
+Before you run, please generate an SSH key by following the instructions
+https://help.github.com/articles/generating-ssh-keys
+
+The program assumes your private key is at ~/.ssh/id_rsa 
+and it will use the key to encrypt all your account passwords.
+
+Then to run, do "java -jar uva-cli-1.0.0-all.jar"
+
+Warranty
+========
+This software comes with ABSOLUTELY NO WARRANTY. 
+
+License
+=======
+I have not decided which license to apply to the source code.
+In the meantime, I reserve all copyrights.
+
 Building
 ========
-- git clone http://github.com/lucastan/libjava.git 
-- Follow the instructions to install ANT and to build libjava-1.0.0.jar 
-- Copy libjava-1.0.0.jar to the lib dir
+To build, you'd need:
+- Java JDK 1.6+
+- libjava
+- org.json
+- Apache ANT: http://ant.apache.org/
+- ANT-contrib: http://ant-contrib.sourceforge.net/
+
+First, do a git clone https://github.com/lucastan/uva-cli.git
+
+Apache ANT
+----------
+- Download and install according to instructions.
+
+ANT-contrib
+-----------
+- Download the binary jar file and install in to the ANT directory.
+
+libjava
+-------
+- git clone https://github.com/lucastan/libjava.git 
+- Follow the instructions to build libjava-1.0.0.jar 
+- Copy libjava-1.0.0.jar to the uva-cli/lib dir
+
+org.json
+--------
+- git clone https://github.com/douglascrockford/JSON-java
+- Unfortunately, you have to build this manually by doing javac and jar
+- Copy org.json.jar to the uva-cli/lib dir.
+
+uva-cli
+-------
+- Do "git submodule init"
 - Build this by typing "ant"
 - You will get dist-1.0.0/uva-cli-1.0.0-all.jar
 
 Usage
 =====
+Run the uva-cli-xxx-all.jar file at the command prompt.
+
+UVA-CLI is an interactive shell which you can type commands.
+Commands are of the syntax: <action> <arg1> <arg2> ...
+
+Settings are saved in the JSON format at <home-dir>/.uva-cli
+where <home-dir> is ~ on Linux systems. Please do not modify manually.
+All passwords are encrypted
+
+The following are possible actions:
+
+add
+----
+Syntax: add <type> <username> <password>
+Adds a user account.
+All accounts will be preserved even after you quit the program.
+
+Currently uva is the only supported type.
+
+remove
+------
+Syntax: remove <username>
+Removes a user account
+
+use
+---
+Syntax: use [<username>]
+Selects a user account as the current account.
+If <username> is omitted, sets current account to none.
+The current account will be preserved even after you quit the program.
+
+show
+----
+Syntax: show 
+Shows all user accounts
+
+send
+----
+Syntax: send <problem-id> <fileName>
+Sends a code file. <fileName> is relative to the current directory, which
+is where you ran the "java -jar ..." command to start uva-cli
+
+The program will auto-detect the language using the file name extension:
+- .java  : Java
+- .cpp   : C++
+- .c     : C
+- .pascal / .pas / .p : Pascal 
+
+status
+------
+Syntax: status
+Prints out the latest ten submissions.
+
+quit / exit
+-----------
+Saves all settings including account info and exits the program.
+
+Example usage
+=============
+> add uva john_doe 12345
+Account added
+
+> use john_doe
+
+> send 123 code.cpp
+Logging in...
+Sending code...
+Sent OK
+
+> status
+Getting status...
+SubId     | ProbId |      Verdict     |  Lang  | Runtime | 
+11605207      757           accepted      C++     0.020
+11605200      757           accepted      C++     0.024
+...
 
 
-This is still incomplete yet.
-Hopefully it will be done over the next few days when I'm free.
-
-Features:
-- Submit a file to the OJ through command line
-- See your submissions
-- See your statistics
-- Password-less submissions
-
-More features coming soon:
+More features coming soon
+==========================
+- Log in only once instead of logging in on every send
+- Supports more coding websites
 - Auto-retry submitting the solution (when UVA is down)
 - Connects to UVAtoolkit
 - Get statistics on a problem
-
-Implementation:
-Source code is included so you know there is no virus in it !
 
 Please let me know if there is any problem!
 
