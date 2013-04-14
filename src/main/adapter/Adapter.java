@@ -32,6 +32,9 @@ public abstract class Adapter
         return null;
     }
 
+    public abstract void printStatus()
+        throws Exception;
+        
     public abstract void login() 
         throws IOException;
 

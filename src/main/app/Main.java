@@ -237,8 +237,6 @@ public class Main
             {
                 System.out.println("Error sending: "+e.getMessage());
             }
-
-            //TODO
         }
         else if (action.equals("show"))
         {
@@ -249,7 +247,14 @@ public class Main
         }
         else if (action.equals("status"))
         {
-            // TODO
+            if (this.curAdap == null)
+            {
+                System.out.println("Please select an account to use first");
+                return;
+            }
+
+            System.out.println("Getting status...");
+            this.curAdap.printStatus();
         }
         else 
         {

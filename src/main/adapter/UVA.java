@@ -1,5 +1,7 @@
 package adapter;
 
+import org.json.*;
+
 import j.io.*;
 import j.web.*;
 
@@ -136,10 +138,34 @@ public class UVA extends Adapter
     }
 
     private String cookies;
+    private int userId;
 
     public UVA(Account acct)
     {
         super(acct);
+
+        this.userId = -1;
+    }
+
+    private int fetchUserId()
+        throws Exception
+    {
+        if (userId > 0)
+            return this.userId;
+
+        HttpURLConnection conn = Util.createConnection(
+            new URL("http://uhunt.felix-halim.net/api/uname2uid/"+this.acct.getUser()), false);
+        
+        String all = Util.readAll(conn);
+
+        try
+        {
+            return this.userId = Integer.parseInt(all.trim());
+        }
+        catch(Exception e)
+        {
+            throw new RuntimeException("Cannot parse user ID: "+all, e);
+        }
     }
 
     @Override
@@ -221,5 +247,124 @@ public class UVA extends Adapter
         Util.writeFormData(conn, data);
         Util.readAll(conn);
 
+    }
+
+    private static String getVerdict(int ver)
+    {
+        switch(ver)
+        {
+        case 10: return "Subm Error";
+        case 15: return "Can't queue";
+        case 20: return "In queue";
+        case 30: return "Compile Err";
+        case 35: return "Restricted func";
+        case 40: return "Runtime Err";
+        case 45: return "output limit";
+        case 50: return "time limit";
+        case 60: return "mem limit";
+        case 70: return "wrong ans";
+        case 80: return "presentation";
+        case 90: return "accepted";
+        }
+
+        return "?";
+    }
+
+    private static String getLang(int id)
+    {
+        switch(id)
+        {
+        case 1: return "C";
+        case 2: return "Java";
+        case 3: return "C++";
+        case 4: return "Pascal";
+        }
+
+        return "?";
+    }
+
+    @Override
+    public void printStatus()
+        throws Exception
+    {
+        final int userId = this.fetchUserId();
+
+        HttpURLConnection conn = Util.createConnection(
+                new URL("http://uhunt.felix-halim.net/api/subs/"+userId), false
+            );
+
+        String all  = Util.readAll(conn);
+        JSONObject obj = new JSONObject(all);
+        Object subStr = obj.get("subs");
+        JSONArray subs = null;
+        if (subStr instanceof String)
+        {
+            String str = (String) subStr;
+            subs = new JSONArray(str);
+        }
+        else
+        {
+            subs = (JSONArray) subStr;
+        }
+
+        int len = subs.length();
+
+        List<JSONArray> list = new ArrayList<JSONArray>();
+        for (int i = 0; i < len;i++)
+        {
+            list.add(subs.getJSONArray(i));            
+        }
+
+        // sort by subm id. Latest will be at 0th elem.
+        Collections.sort(list, new Comparator<JSONArray>(){
+            @Override
+            public int compare(JSONArray a1, JSONArray a2)
+            {
+                try
+                {
+                    long k = a2.getLong(0) - a1.getLong(0);
+                    if (k < 0) return -1;
+                    if (k > 0) return 1;
+                    return 0;
+                }
+                catch(Exception e)
+                {
+                    // omg so fcking annoying with exceptions.
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        System.out.println("SubId     | ProbId |      Verdict     |  Lang  | Runtime | ");
+        //                  123456789---123456---1234567890123456---123456---1234567---
+
+        int iterLen = Math.min(10, list.size());
+        for (int i = 0; i < iterLen;i++)
+        {
+            JSONArray sub = list.get(i);
+
+            /*
+            Format:
+            Submission ID
+            Problem ID
+            Verdict ID
+            Runtime
+            Submission Time (unix timestamp)
+            Language ID (1=ANSI C, 2=Java, 3=C++, 4=Pascal)
+            Submission Rank
+            */
+
+            long subId = sub.getInt(0);
+            int probId = sub.getInt(1);
+            int verdictId = sub.getInt(2);
+            int runtime = sub.getInt(3);
+            long time = sub.getLong(4);
+            int langId = sub.getInt(5);
+            int rank = sub.getInt(6);
+
+            System.out.format("% 9d   % 6d   %16s   %6s   % 3d.%03d\n", 
+                subId, probId, getVerdict(verdictId),
+                getLang(langId), runtime/1000, runtime%1000);
+        }
     }
 }
