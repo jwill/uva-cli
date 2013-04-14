@@ -1,8 +1,19 @@
 Command line tool for the UVa Online Judge website
 
+Building
+========
+- git clone http://github.com/lucastan/libjava.git 
+- Follow the instructions to install ANT and to build libjava-1.0.0.jar 
+- Copy libjava-1.0.0.jar to the lib dir
+- Build this by typing "ant"
+- You will get dist-1.0.0/uva-cli-1.0.0-all.jar
+
+Usage
+=====
+
+
 This is still incomplete yet.
 Hopefully it will be done over the next few days when I'm free.
-
 
 Features:
 - Submit a file to the OJ through command line
@@ -16,12 +27,7 @@ More features coming soon:
 - Get statistics on a problem
 
 Implementation:
-Everything is written in C++ because I'm a hardcore C++ programmer. =p
-
 Source code is included so you know there is no virus in it !
-
-This should work across Windows and Linux based platforms.
-It has a thin wrapper around the socket API.
 
 Please let me know if there is any problem!
 
