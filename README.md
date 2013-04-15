@@ -33,13 +33,100 @@ The program will use the key to encrypt all your account passwords.
 
 Then to run, do `java -jar uva-cli-1.0.0-all.jar`
 
+Usage
+=====
+Run the uva-cli-xxx-all.jar file at the command prompt.
+
+UVA-CLI is an interactive shell which you can type commands.
+Commands are of the syntax: `<action> <arg1> <arg2> ...`
+
+Settings are saved in the JSON format at `~/.uva-cli`
+where ~ is your home directory. Please do not modify manually.
+All passwords are encrypted.
+
+The following are possible actions:
+
+add
+----
+Syntax: add {type} {username} {password}
+
+Adds a user account.
+All accounts will be preserved even after you quit the program.
+
+Currently uva is the only supported type.
+
+remove
+------
+Syntax: remove {username}
+
+Removes a user account
+
+use
+---
+Syntax: use {username}
+
+Sets a user account as current.
+If {username} is omitted, sets the current account to none.
+The current account setting will be preserved even after you quit the program.
+
+show
+----
+Syntax: show 
+
+Shows all user accounts
+
+send
+----
+Syntax: send {problem-id} {fileName}
+
+Sends a code file. {fileName} is relative to the current directory, which
+is where you ran the `java -jar ...` command to start uva-cli
+
+The program will auto-detect the language using the file name extension:
+- .java  : Java
+- .cpp   : C++
+- .c     : C
+- .pascal / .pas / .p : Pascal 
+
+status
+------
+Syntax: status
+
+Prints out the latest ten submissions.
+
+quit / exit
+-----------
+Saves all settings including account info and exits the program.
+
+Example usage
+=============
+<pre>
+> add uva john_doe 12345
+Account added
+
+> use john_doe
+
+> send 123 code.cpp
+Logging in...
+Sending code...
+Sent OK
+
+> status
+Getting status...
+SubId     | ProbId |      Verdict     |  Lang  | Runtime | 
+11605207      757           accepted      C++     0.020
+11605200      757           accepted      C++     0.024
+...
+</pre>
+
+
 Building
 ========
 To build, you'd need:
 - Java JDK 1.6+
 - libjava
 - org.json lib
-- Apache ANT: http://ant.apache.org/
+- Apache ANT 1.6+: http://ant.apache.org/
 - ANT-contrib: http://ant-contrib.sourceforge.net/
 
 First, do a `git clone https://github.com/lucastan/uva-cli.git`
@@ -70,86 +157,6 @@ uva-cli
 - Then build this by typing `ant`
 - You will get dist-1.0.0/uva-cli-1.0.0-all.jar
 
-Usage
-=====
-Run the uva-cli-xxx-all.jar file at the command prompt.
-
-UVA-CLI is an interactive shell which you can type commands.
-Commands are of the syntax: `<action> <arg1> <arg2> ...`
-
-Settings are saved in the JSON format at `~/.uva-cli`
-where ~ is your home directory. Please do not modify manually.
-All passwords are encrypted.
-
-The following are possible actions:
-
-add
-----
-Syntax: add <type> <username> <password>
-Adds a user account.
-All accounts will be preserved even after you quit the program.
-
-Currently uva is the only supported type.
-
-remove
-------
-Syntax: remove <username>
-Removes a user account
-
-use
----
-Syntax: use [<username>]
-Selects a user account as the current account.
-If <username> is omitted, sets current account to none.
-The current account will be preserved even after you quit the program.
-
-show
-----
-Syntax: show 
-Shows all user accounts
-
-send
-----
-Syntax: send <problem-id> <fileName>
-Sends a code file. <fileName> is relative to the current directory, which
-is where you ran the `java -jar ...` command to start uva-cli
-
-The program will auto-detect the language using the file name extension:
-- .java  : Java
-- .cpp   : C++
-- .c     : C
-- .pascal / .pas / .p : Pascal 
-
-status
-------
-Syntax: status
-Prints out the latest ten submissions.
-
-quit / exit
------------
-Saves all settings including account info and exits the program.
-
-Example usage
-=============
-<pre>
-> add uva john_doe 12345
-Account added
-
-> use john_doe
-
-> send 123 code.cpp
-Logging in...
-Sending code...
-Sent OK
-
-> status
-Getting status...
-SubId     | ProbId |      Verdict     |  Lang  | Runtime | 
-11605207      757           accepted      C++     0.020
-11605200      757           accepted      C++     0.024
-...
-</pre>
-
 More features coming soon
 ==========================
 - Log in only once instead of logging in on every send
@@ -164,14 +171,17 @@ Credits
 - uHunt API
 - json.org
 
-Warranty
-========
-This software comes with ABSOLUTELY NO WARRANTY. 
+Disclaimer
+==========
+While every effort has been made to ensure this software is free of defects, 
+this software comes with ABSOLUTELY NO WARRANTY to the maximum extent 
+permitted by the law.
 
 License
 =======
-I have not decided which license to apply to the source code.
-In the meantime, I reserve all copyrights.
+I have yet to decide on a license to apply to the source code.
+Meanwhile, I reserve all copyrights.
+
 
 Please let me know if there is any problem!
 
