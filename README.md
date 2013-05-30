@@ -17,9 +17,6 @@ To build, please see BUILDING section.
 
 Running
 =======
-A binary, ready-to-run version can be obtained from
-    https://dl.dropboxusercontent.com/u/17243832/uva-cli-1.0.0-all.jar    
-
 All dependencies are packaged in to the jar for your convenience.
 
 If you prefer to build it yourself, please see the Building section.
@@ -125,37 +122,18 @@ Building
 To build, you'd need:
 - Java JDK 1.6+
 - libjava
-- org.json lib
-- Apache ANT 1.6+: http://ant.apache.org/
-- ANT-contrib: http://ant-contrib.sourceforge.net/
 
-First, do a `git clone https://github.com/lucastan/uva-cli.git`
-
-Apache ANT
-----------
-- Download and install according to instructions.
-
-ANT-contrib
------------
-- Download the binary jar file and install in to the ANT directory.
+First, do a `git clone https://github.com/jwill/uva-cli.git`
 
 libjava
 -------
-- `git clone https://github.com/lucastan/libjava.git` 
-- Follow the instructions to build libjava-1.0.0.jar 
-- Copy libjava-1.0.0.jar to the uva-cli/lib dir
-
-org.json
---------
-- `git clone https://github.com/douglascrockford/JSON-java`
-- Unfortunately, you have to build this manually by doing `javac` and `jar`
-- Copy org.json.jar to the uva-cli/lib dir.
+- `git clone https://github.com/jwill/libjava.git` 
+- Follow the instructions to build libjava 
+- Copy libjava.jar to the uva-cli/lib dir
 
 uva-cli
 -------
-- Do `git submodule init` and then `git submodule update`
-- Then build this by typing `ant`
-- You will get dist-1.0.0/uva-cli-1.0.0-all.jar
+- Run `gradle jar` or `gradlew jar` if you don't have Gradle installed.
 
 More features coming soon
 ==========================
@@ -170,6 +148,7 @@ Credits
 - UVA website
 - uHunt API
 - json.org
+- lucastan (https://github.com/lucastan)
 
 Disclaimer
 ==========
@@ -179,9 +158,8 @@ permitted by the law.
 
 License
 =======
-I have yet to decide on a license to apply to the source code.
-Meanwhile, I reserve all copyrights.
+lucastan has yet to decide on a license to apply to the source code. So my fork is also undetermined. 
 
 
-Please let me know if there is any problem!
+Please let me know if there is any problems.
 

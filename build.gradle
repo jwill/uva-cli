@@ -1,0 +1,29 @@
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+    flatDir { dirs "lib" }
+}
+
+dependencies {
+    compile 'org.json:json:20090211'
+    compile name:'libjava'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+       }
+   }
+}
+
+
+jar {
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '1.5'
+}
+
