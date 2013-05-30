@@ -218,6 +218,7 @@ public class Main {
               "add Adds a user account.",
               "remove Removes a user account.",
               "use Set the current user account.",
+              "rank Get user rank.",
               "show Shows all user accounts",
               "send Sends a code file.",
               "status Shows the status of the last 10 submissions",
@@ -226,9 +227,9 @@ public class Main {
       for (String s : text) {
         System.out.println(s);
       }
-
-
-    } else {
+    } else if (action.equals("rank")) {
+      this.curAdap.getUserRank();
+    }else {
       System.out.println("Unrecognized action: " + action);
     }
   }
